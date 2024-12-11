@@ -3,17 +3,25 @@ import './App.css'
 import { sculptureList } from './data'
 
 
-export default function Gallary() {
+export default function Gallery() {
   const [index, setIndex] = useState(0);
+  const [showMore, setShowMore] = useState(false);
 
-  function handleClick() {
-   setIndex(index + 1);
+  function handleNextClick() {
+    setIndex((prevIndex) => (prevIndex + 1)% sculptureList.length);
+    if (sculptureList.length === 0) {
+      return <p>No sculptures available.</p>;
+    }
+  }
+
+  function handleMoreClick() {
+    setShowMore(!showMore);
   }
 
   let sculpture = sculptureList[index];
   return (
     <>
-      <button onClick={handleClick}>
+      <button onClick={handleNextClick}>
         Next
       </button>
       <h2>
@@ -23,13 +31,14 @@ export default function Gallary() {
       <h3>  
         ({index + 1} of {sculptureList.length})
       </h3>
+      <button onClick={handleMoreClick}>
+        {showMore ? 'Hide' : 'Show'} details
+      </button>
+      {showMore && <p>{sculpture.description}</p>}
       <img 
         src={sculpture.url} 
         alt={sculpture.alt}
       />
-      <p>
-        {sculpture.description}
-      </p>
     </>
   );
 }
